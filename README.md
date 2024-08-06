@@ -2,4 +2,4 @@
 公测密钥：B9GDEnCFJ0PQB50sorpOBMnDqAsg2UcJ7f5qDURYIIU=
 
 # ToDoList
-1. 批量替换错别字
+1. 批量替换错别字 by fear798
