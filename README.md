@@ -4,4 +4,4 @@
 公共密钥：B9GDEnCFJ0PQB50sorpOBMnDqAsg2UcJ7f5qDURYIIU=  
 功能更新：点击验证按钮即可刷新功能列表
 # ToDoList
-1. 批量替换错别字 by fear798
+1. ☑️批量替换错别字 by fear798
