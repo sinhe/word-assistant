@@ -1,6 +1,6 @@
 @{
     Layout = null;
-    int rows = 10;
+    int rows = 50;
 }
 
 <!DOCTYPE html>
@@ -9,12 +9,28 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11">
-    <title>批量替换错别字</title>
+    <title>批量查找替换</title>
     <link href="/lib/layui/css/layui.css" rel="stylesheet">
+    <style>
+        .layui-table tbody {
+            display: block;
+            overflow-y: auto;
+        }
+        .layui-table tbody tr {
+            table-layout: fixed;
+            display: table;
+            width: 100%;
+        }
+        .layui-table thead tr, .layui-table tfoot tr {
+            table-layout: fixed;
+            display: table;
+            width: calc(100% - 17px);
+        }
+    </style>
 </head>
 <body style="padding-top: 60px;">
     <div class="layui-nav" lay-bar="disabled" style="position: fixed; top: 0; width: 100%; z-index: 999;">
-        <li class="layui-nav-item layui-this layui-font-26">批量替换错别字</li>
+        <li class="layui-nav-item layui-this layui-font-26">批量查找替换</li>
         <li class="layui-nav-item" style="float: right;">
             <button id="execute" type="button" class="layui-btn layui-btn-normal layui-btn-radius" style="width: 120px;">执行</button>
         </li>
@@ -23,31 +39,41 @@
         <table class="layui-table" lay-skin="nob" lay-size="sm">
             <thead>
                 <tr>
+                    <th style="width: 30px;"></th>
                     <th>查找内容 <span class="layui-font-red">*</span></th>
                     <th>替换为</th>
                     <th>批注</th>
-                    <th></th>
+                    <th style="width: 60px;"></th>
                 </tr> 
             </thead>
             <tbody>
                 @for (int i = 0; i < rows; i++)
                 {
                 <tr>
+                    <td style="width: 30px; text-align: right;">@(i+1).</td>
                     <td><input type="text" id="input_1_@i" name="input_1_@i" class="layui-input"></td>
                     <td><input type="text" id="input_2_@i" name="input_2_@i" class="layui-input"></td>
                     <td><input type="text" id="input_3_@i" name="input_3_@i" class="layui-input"></td>
-                    <td>
-                        <i id="input_4_@i" class="input_4 layui-hide-v layui-icon layui-icon-rate"></i>
-                        <span id="input_5_@i" class="input_5 layui-font-red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <td style="width: 60px;">
+                        <i id="input_4_@i" class="input_4 layui-hide-v layui-icon layui-icon-circle"></i>
+                        <span id="input_5_@i" class="input_5 layui-font-red">&nbsp;&nbsp;&nbsp;</span>
                     </td>
                 </tr>
                 }
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="4" style="text-align: center;">
+                    <td style="width: 30px;"></td>
+                    <td style="text-align: left;">
+                        <button id="load" type="button" class="layui-btn layui-btn-primary layui-border-green layui-btn-radius" style="width: 120px;">从 Excel 加载</button>
+                    </td>
+                    <td style="text-align: center;">
                         <button id="save" type="button" class="layui-btn layui-btn-radius" style="width: 120px;">保存</button>
                     </td>
+                    <td style="text-align: right;">
+                        <button id="clear" type="button" class="layui-btn layui-btn-primary layui-border-green layui-btn-radius" style="width: 120px;">清空</button>
+                    </td>
+                    <td style="width: 60px;"></td>
                 </tr>
             </tfoot>
         </table>
@@ -58,7 +84,22 @@
             var $ = layui.$;
             var layer = layui.layer;
 
-            $('#save').on('click', function () {
+            $('#load').on('click', function() {
+                var layerIdx = layer.load(0, { shade: true });
+                var json = window.external.GetExcel();
+                if (json != '') {
+                    $('#clear').click();
+                    $.each(JSON.parse(json), function(idx, obj) {
+                        $('#input_1_' + idx).val(obj.input_1);
+                        $('#input_2_' + idx).val(obj.input_2);
+                        $('#input_3_' + idx).val(obj.input_3);
+                    });
+                    layer.msg('加载成功');
+                }
+                layer.close(layerIdx);
+            });
+
+            $('#save').on('click', function() {
                 var layerIdx = layer.load(0, { shade: true });
                 var json = JSON.stringify(Table2Json());
                 var result = window.external.SetData(json);
@@ -66,16 +107,23 @@
                 layer.close(layerIdx);
             });
 
-            $('#execute').on('click', function () {
+            $('#clear').on('click', function() {
+                $('.layui-input').val('');
+                $('.input_4').removeClass('layui-hide-v').removeClass('layui-show-v').addClass('layui-hide-v').removeClass('layui-icon-circle').removeClass('layui-icon-time').removeClass('layui-icon-success').addClass('layui-icon-circle');
+                $('.input_5').html('&nbsp;&nbsp;&nbsp;');
+            });
+
+            $('#execute').on('click', function() {
                 var jsonArray = Table2Json();
                 if (jsonArray.length > 0) {
-                    $('.input_4').removeClass('layui-hide-v').removeClass('layui-show-v').addClass('layui-show-v').removeClass('layui-icon-rate').removeClass('layui-icon-rate-half').removeClass('layui-icon-rate-solid').addClass('layui-icon-rate');
-                    $('.input_5').html('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
+                    $('.input_4').removeClass('layui-hide-v').removeClass('layui-show-v').addClass('layui-show-v').removeClass('layui-icon-circle').removeClass('layui-icon-time').removeClass('layui-icon-success').addClass('layui-icon-circle');
+                    $('.input_5').html('&nbsp;&nbsp;&nbsp;');
                     var layerIdx = layer.load(0, { shade: true });
                     StepExecute(jsonArray, 0);
                 }
             });
-
+            
+            $('.layui-table tbody').height(document.documentElement.clientHeight - 160);
             Json2Table();
         });
 
@@ -84,10 +132,10 @@
             var layer = layui.layer;
 
             var inputIdx = InputIndex()[idx];
-            $('#input_4_' + inputIdx).removeClass('layui-icon-rate').addClass('layui-icon-rate-half');
+            $('#input_4_' + inputIdx).removeClass('layui-icon-circle').addClass('layui-icon-time');
             setTimeout(function(){
                 var result = window.external.Execute(JSON.stringify(jsonArray[idx]));
-                $('#input_4_' + inputIdx).removeClass('layui-icon-rate-half').addClass('layui-icon-rate-solid');
+                $('#input_4_' + inputIdx).removeClass('layui-icon-time').addClass('layui-icon-success');
                 $('#input_5_' + inputIdx).html(result);
 
                 idx++;
