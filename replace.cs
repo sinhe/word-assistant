@@ -78,4 +78,38 @@ public class WinForm : Form
 
         return "已保存至 " + dataFile;
     }
+
+    public string GetExcel()
+    {
+        OpenFileDialog fileDialog = new OpenFileDialog();
+        fileDialog.Filter = "Excel 文件|*.xls;*.xlsx";
+        if (fileDialog.ShowDialog() == DialogResult.OK)
+        {
+            Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();
+            excel.Visible = false;
+            Microsoft.Office.Interop.Excel.Workbook wb = excel.Workbooks.Open(fileDialog.FileName);
+            Microsoft.Office.Interop.Excel.Worksheet ws = wb.Sheets[1] as Microsoft.Office.Interop.Excel.Worksheet;
+            Microsoft.Office.Interop.Excel.Range rg = ws.UsedRange;
+
+            List<Dictionary<string, object>> dics = new List<Dictionary<string, object>>();
+            for (int i = 1; i <= rg.Rows.Count; i++)
+            {
+                Dictionary<string, object> dic = new Dictionary<string, object>();
+                for (int j = 1; j <= rg.Columns.Count; j++)
+                {
+                    Microsoft.Office.Interop.Excel.Range cell = rg.Cells[i, j] as Microsoft.Office.Interop.Excel.Range;
+                    dic["input_" + j.ToString()] = cell.Text;
+                }
+                dics.Add(dic);
+            }
+
+            wb.Close();
+            excel.Quit();
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(excel);
+
+            return JsonConvert.SerializeObject(dics);
+        }
+
+        return "[]";
+    }
 }
