@@ -32,7 +32,7 @@
     <div class="layui-nav" lay-bar="disabled" style="position: fixed; top: 0; width: 100%; z-index: 999;">
         <li class="layui-nav-item layui-this layui-font-26">批量查找替换</li>
         <li class="layui-nav-item" style="float: right;">
-            <button id="execute" type="button" class="layui-btn layui-btn-normal layui-btn-radius" style="width: 120px;">执行</button>
+            <button id="execute" type="button" class="layui-btn layui-btn-normal layui-btn-radius" style="min-width: 120px;">执行</button>
         </li>
     </div>
     <form class="layui-form" onsubmit="return false;">
@@ -40,7 +40,7 @@
             <thead>
                 <tr>
                     <th style="width: 30px;"></th>
-                    <th>查找内容 <span class="layui-font-red">*</span></th>
+                    <th>查找内容 <span class="layui-badge-dot"></span></th>
                     <th>替换为</th>
                     <th>批注</th>
                     <th style="width: 60px;"></th>
@@ -55,7 +55,7 @@
                     <td><input type="text" id="input_2_@i" name="input_2_@i" class="layui-input"></td>
                     <td><input type="text" id="input_3_@i" name="input_3_@i" class="layui-input"></td>
                     <td style="width: 60px;">
-                        <i id="input_4_@i" class="input_4 layui-hide-v layui-icon layui-icon-circle"></i>
+                        <i id="input_4_@i" style="vertical-align: bottom;" class="input_4 layui-hide-v layui-icon layui-icon-circle"></i>
                         <span id="input_5_@i" class="input_5 layui-font-red">&nbsp;&nbsp;&nbsp;</span>
                     </td>
                 </tr>
@@ -65,13 +65,13 @@
                 <tr>
                     <td style="width: 30px;"></td>
                     <td style="text-align: left;">
-                        <button id="load" type="button" class="layui-btn layui-btn-primary layui-border-green layui-btn-radius" style="width: 120px;">从 Excel 加载</button>
+                        <button id="load" type="button" class="layui-btn layui-btn-primary layui-border-green layui-btn-radius" style="min-width: 120px;">从 Excel 加载</button>
                     </td>
                     <td style="text-align: center;">
-                        <button id="save" type="button" class="layui-btn layui-btn-radius" style="width: 120px;">保存</button>
+                        <button id="save" type="button" class="layui-btn layui-btn-radius" style="min-width: 120px;">保存</button>
                     </td>
                     <td style="text-align: right;">
-                        <button id="clear" type="button" class="layui-btn layui-btn-primary layui-border-green layui-btn-radius" style="width: 120px;">清空</button>
+                        <button id="clear" type="button" class="layui-btn layui-btn-primary layui-border-green layui-btn-radius" style="min-width: 120px;">清空</button>
                     </td>
                     <td style="width: 60px;"></td>
                 </tr>
@@ -136,7 +136,7 @@
             setTimeout(function(){
                 var result = window.external.Execute(JSON.stringify(jsonArray[idx]));
                 $('#input_4_' + inputIdx).removeClass('layui-icon-time').addClass('layui-icon-success');
-                $('#input_5_' + inputIdx).html(result);
+                $('#input_5_' + inputIdx).html('<span class="layui-badge">' + result + '</span>');
 
                 idx++;
                 if (idx < jsonArray.length) {
