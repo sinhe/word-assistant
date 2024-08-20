@@ -1,0 +1,354 @@
+@{
+    Layout = null;
+    int rows = 50;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11">
+    <title>批量提取数据</title>
+    <link href="/lib/layui/css/layui.css" rel="stylesheet">
+    <style>
+        .layui-table tbody {
+            display: block;
+            overflow-y: auto;
+        }
+        .layui-table tbody tr {
+            table-layout: fixed;
+            display: table;
+            width: 100%;
+        }
+        .layui-table thead tr, .layui-table tfoot tr {
+            table-layout: fixed;
+            display: table;
+            width: calc(100% - 17px);
+        }
+    </style>
+</head>
+<body style="padding-top: 60px;">
+    <div class="layui-nav" lay-bar="disabled" style="position: fixed; top: 0; width: 100%; z-index: 999;">
+        <li class="layui-nav-item layui-this layui-font-26">批量提取数据</li>
+        <li class="layui-nav-item" style="float: right;">
+            <button id="execute" type="button" class="layui-btn layui-btn-normal layui-btn-radius" style="min-width: 120px;">执行</button>
+            <button id="export" type="button" class="layui-btn layui-btn-warm layui-btn-radius" style="min-width: 120px;">导出到 Excel</button>
+        </li>
+    </div>
+    <form class="layui-form" onsubmit="return false;">
+        <table class="layui-table" lay-skin="nob" lay-size="sm">
+            <thead>
+                <tr>
+                    <th style="width: 30px;"></th>
+                    <th>起始位置<i class="layui-icon layui-icon-tips" lay-on="tips-input_1" style="cursor: default; margin-left: 4px; font-weight: normal;"></i></th>
+                    <th style="width: 100px;">表格编号 <span class="layui-badge-dot" lay-on="tips-input_2"></span></th>
+                    <th style="width: 100px;">行号 <span class="layui-badge-dot" lay-on="tips-input_3"></span></th>
+                    <th style="width: 100px;">列号 <span class="layui-badge-dot" lay-on="tips-input_4"></span></th>
+                    <th>赋予变量名</th>
+                    <th>提取的数据</th>
+                    <th style="width: 30px;"></th>
+                </tr> 
+            </thead>
+            <tbody>
+                @for (int i = 0; i < rows; i++)
+                {
+                <tr>
+                    <td style="width: 30px; text-align: right;">@(i + 1).</td>
+                    <td>
+                        <div class="layui-input-wrap">
+                            <input id="input_1_@i" name="input_1_@i" type="text" lay-affix="form" lay-filter="form" lay-options="{split: true}" class="layui-input">
+                        </div>
+                    </td>
+                    <td style="width: 100px;">
+                        <input id="input_2_@i" name="input_2_@i" type="number" lay-affix="number" step="1" min="1" class="layui-input">
+                    </td>
+                    <td style="width: 100px;">
+                        <input id="input_3_@i" name="input_3_@i" type="number" lay-affix="number" step="1" min="1" class="layui-input">
+                    </td>
+                    <td style="width: 100px;">
+                        <input id="input_4_@i" name="input_4_@i" type="number" lay-affix="number" step="1" min="1" class="layui-input">
+                    </td>
+                    <td>
+                        <input id="input_5_@i" name="input_5_@i" type="text" class="layui-input">
+                    </td>
+                    <td>
+                        <input id="input_6_@i" name="input_6_@i" type="text" class="layui-input">
+                    </td>
+                    <td style="width: 30px;">
+                        <i id="input_7_@i" style="vertical-align: bottom;" class="input_7 layui-hide-v layui-icon layui-icon-circle"></i>
+                    </td>
+                </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td style="width: 30px;"></td>
+                    <td style="text-align: left;">
+                        <button id="loadStructure" type="button" class="layui-btn layui-btn-primary layui-border-green layui-btn-radius" style="min-width: 120px;">加载文档结构</button>
+                        <i class="layui-icon layui-icon-tips" lay-on="tips-loadStructure" style="cursor: default; margin-left: 4px;"></i>
+                        <button id="layer-select" type="button" class="layui-btn layui-btn-primary layui-border-green layui-btn-radius layui-hide" style="min-width: 120px;" lay-on="layer-select">隐藏按钮</button>
+                    </td>
+                    <td colspan="4" style="text-align: center;">
+                        <button id="save" type="button" class="layui-btn layui-btn-radius" style="min-width: 120px;">保存</button>
+                    </td>
+                    <td style="text-align: right;">
+                        <button id="clear" type="button" class="layui-btn layui-btn-primary layui-border-green layui-btn-radius" style="min-width: 120px;">清空</button>
+                    </td>
+                    <td style="width: 30px;"></td>
+                </tr>
+            </tfoot>
+        </table>
+    </form>
+    <script src="/lib/layui/layui.js"></script>
+    <script>
+        layui.use(function () {
+            var $ = layui.$;
+            var layer = layui.layer;
+            var form = layui.form;
+            var util = layui.util;
+
+            util.on('lay-on', {
+                'tips-loadStructure': function () {
+                    layer.tips('加载文档结构后可以直接选择起始位置，建议新手使用，大文件耗时较长！', this, {
+                        tips: 1
+                    });
+                },
+                'tips-input_1': function () {
+                    layer.tips('留空则默认从文档起始位置计算', this);
+                },
+                'tips-input_2': function () {
+                    layer.tips('从起始位置算第几个表格', this);
+                },
+                'tips-input_3': function () {
+                    layer.tips('第几行', this);
+                },
+                'tips-input_4': function () {
+                    layer.tips('第几列', this);
+                }
+            })
+
+            form.on('select(select-filter)', function (data) {
+                $('#' + currentInput).val(data.value);
+                layer.closeAll();
+            });
+
+            form.on('input-affix(form)', function (data) {
+                if (options == '') {
+                    layer.msg('请先加载文档结构，大文件耗时较长！');
+                    return false;
+                }
+
+                var elem = data.elem;
+                currentInput = elem.id;
+                $('#layer-select').click();
+            });
+            
+            $('#loadStructure').on('click', function () {
+                var layerIdx = layer.load(0, { shade: true });                
+                setTimeout(function () {
+                    var result = window.external.GetStructure();
+                    options = Xml2Select(result);
+                    OpenSelect();
+                    layer.msg('加载成功');
+                    layer.close(layerIdx);
+                }, 1000);
+            });
+
+            $('#save').on('click', function() {
+                var layerIdx = layer.load(0, { shade: true });
+                var json = JSON.stringify(Table2Json());
+                var result = window.external.SetData(json);
+                layer.msg(result);
+                layer.close(layerIdx);
+            });
+
+            $('#clear').on('click', function() {
+                $('.layui-input').val('');
+                $('.input_7').removeClass('layui-hide-v').removeClass('layui-show-v').addClass('layui-hide-v').removeClass('layui-icon-circle').removeClass('layui-icon-time').removeClass('layui-icon-success').removeClass('layui-icon-error').addClass('layui-icon-circle');
+            });
+
+            $('#execute').on('click', function() {
+                var jsonArray = Table2Json().map(function(element, index, array){
+                    return (element["index"] = index, element);
+                });
+                
+                if (jsonArray.length > 0) {
+                    $('.input_7').removeClass('layui-hide-v').removeClass('layui-show-v').addClass('layui-show-v').removeClass('layui-icon-circle').removeClass('layui-icon-time').removeClass('layui-icon-success').removeClass('layui-icon-error').addClass('layui-icon-circle');
+                    var layerIdx = layer.load(0, { shade: true });
+                    StepExecute(jsonArray, 0);
+                }
+            });
+
+            $('#export').on('click', function() {
+                var jsonArray = Table2Excel();
+                if (jsonArray.length > 0) {
+                    var layerIdx = layer.load(0, { shade: true });
+                    var json = JSON.stringify(jsonArray);
+                    var result = window.external.SetExcel(json);
+                    if (result.indexOf('Exception:') == 0) {
+                        layer.msg(result.substring(10));
+                    }
+                    else {
+                        layer.msg('导出 ' + result + ' 条');
+                    }
+                    layer.close(layerIdx);
+                }
+            });
+
+            $('.layui-table tbody').height(document.documentElement.clientHeight - 160);
+            Json2Table();
+        });
+
+        var options = '';
+        var currentInput = '';
+
+        function OpenSelect() {
+            var $ = layui.$;
+            var layer = layui.layer;
+            var form = layui.form;
+            var util = layui.util;
+
+            util.on({
+                "layer-select": function () {
+                    layer.open({
+                        type: 1,
+                        area: ['500px', '300px'],
+                        title: '选择起始位置',
+                        shadeClose: false,
+                        maxmin: true,
+                        content: '<form class="layui-form layui-padding-3"><select lay-filter="select-filter" lay-append-to="body" lay-append-position="fixed"><option value="">请选择</option>' + options + '</select></form>',
+                        success: function (layero) {
+                            form.render(layero.find('.layui-form select'));
+                            var selectElem = layero.find('.layui-form-select');
+                            layero.find('.layui-layer-content').on('scroll', function () {
+                                selectElem.removeClass('layui-form-selected');
+                                $('.layui-select-panel-wrap').detach();
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
+        function StepExecute(jsonArray, idx) {
+            var $ = layui.$;
+            var layer = layui.layer;
+
+            var inputIdx = InputIndex()[idx];
+            $('#input_7_' + inputIdx).removeClass('layui-icon-circle').addClass('layui-icon-time');
+            setTimeout(function(){
+                var result = window.external.Execute(JSON.stringify(jsonArray[idx]));
+                if (result.indexOf('Exception:') == 0) {
+                    $('#input_7_' + inputIdx).removeClass('layui-icon-time').addClass('layui-icon-error');
+                    layer.msg(result.substring(10));
+                }
+                else {
+                    $('#input_7_' + inputIdx).removeClass('layui-icon-time').addClass('layui-icon-success');
+                    $('#input_6_' + inputIdx).val(result);
+                }
+
+                idx++;
+                if (idx < jsonArray.length) {
+                    StepExecute(jsonArray, idx);
+                }
+                else {
+                    layer.closeAll();
+                    layer.msg('执行成功');
+                }
+            }, 500);
+        }
+
+        function InputIndex() {
+            var $ = layui.$;
+
+            var result = [];
+            for (var i = 0; i < @(rows); i++) {
+                if ($('#input_2_' + i).val() == '') {
+                    continue;
+                }
+
+                result.push(i);
+            }
+            return result;
+        }
+
+        function Xml2Select(xml) {
+            var $ = layui.$;
+
+            var options = '';
+            $(xml).find("item").each(function () {
+                var value = $(this).attr("names");
+                var text = $(this).attr("name");
+                var level = Number($(this).attr("level"));
+                while (level > 1) {
+                    text = '⊢ ' + text;
+                    level--;
+                }
+                var option = '<option value="' + value + '">' + text + '</option>';
+                options += option;
+            });
+
+            return options;
+        }
+
+        function Table2Json() {
+            var $ = layui.$;
+
+            var jsonResult = [];
+            for (var i = 0; i < @(rows); i++) {
+                if ($('#input_2_' + i).val() == '') {
+                    continue;
+                }
+
+                var rowData = {
+                    "input_1": $('#input_1_' + i).val(),
+                    "input_2": $('#input_2_' + i).val(),
+                    "input_3": $('#input_3_' + i).val(),
+                    "input_4": $('#input_4_' + i).val(),
+                    "input_5": $('#input_5_' + i).val(),
+                };
+                jsonResult.push(rowData);
+            }
+            return jsonResult;
+        }
+
+        function Table2Excel() {
+            var $ = layui.$;
+
+            var jsonResult = [];
+            for (var i = 0; i < @(rows); i++) {
+                if ($('#input_5_' + i).val() == '' && $('#input_6_' + i).val() == '') {
+                    continue;
+                }
+
+                var rowData = {
+                    "input_5": $('#input_5_' + i).val(),
+                    "input_6": $('#input_6_' + i).val(),
+                };
+                jsonResult.push(rowData);
+            }
+            return jsonResult;
+        }
+
+        function Json2Table() {
+            var $ = layui.$;
+            var layer = layui.layer;
+
+            var layerIdx = layer.load(0, { shade: true });
+            var json = window.external.GetData();
+            if (json != '') {
+                $.each(JSON.parse(json), function (idx, obj) {
+                    $('#input_1_' + idx).val(obj.input_1);
+                    $('#input_2_' + idx).val(obj.input_2);
+                    $('#input_3_' + idx).val(obj.input_3);
+                    $('#input_4_' + idx).val(obj.input_4);
+                    $('#input_5_' + idx).val(obj.input_5);
+                });
+                layer.msg('加载成功');
+            }
+            layer.close(layerIdx);
+        }
+    </script>
+</body>
+</html>
