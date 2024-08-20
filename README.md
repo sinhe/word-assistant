@@ -6,5 +6,6 @@
 数据安全：服务端仅验证密钥并提供程序运行所必须的文件，用户端输入的数据保存在本地电脑中，程序处理仅在本地Word插件环境中运行。
 # ToDoList
 1. ☑️批量查找替换 by fear798 （功能：批量查找和替换，保存多个条件，可添加批注，可加载Excel数据）
-![103115](https://github.com/user-attachments/assets/75d31872-6500-4778-ad3c-a0f8b93003ee)
-2. 🔘自动提取数据 by gix （功能：从表格中提取数据保存到Excel中）
+![1111841](https://github.com/user-attachments/assets/3f81b02c-a6af-40de-bbbd-ffd9cc35e002)
+2. ☑️批量提取数据 by gix （功能：从表格中批量提取数据并导出到Excel中）
+![2112243](https://github.com/user-attachments/assets/4cbc90db-ac28-46a2-b917-abc5482dc626)
