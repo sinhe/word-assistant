@@ -2,7 +2,7 @@
 系统要求：Windows 7 SP1+，Office 2013+  
 下载地址：[https://github.com/sinhe/word-assistant/releases/download/v1.0.0.0/setup.exe](https://github.com/sinhe/word-assistant/releases/download/v1.0.0.0/setup.exe)  
 公共密钥：B9GDEnCFJ0PQB50sorpOBMnDqAsg2UcJ7f5qDURYIIU=  
-功能更新：点击验证按钮即可刷新功能列表。 
+功能更新：点击验证按钮即可刷新功能列表。  
 技术实现：使用VSTO开发Word插件并打包成exe程序安装到本机，UI采用WebBrowser加载HTML，再通过window.external调用C#代码，使用微软Office组件Microsoft.Office.Interop提供的功能处理本机Office业务逻辑。  
 数据安全：服务端仅验证密钥并提供程序运行所必须的文件，用户端输入的数据保存在本地电脑中，程序处理仅在本地Word插件环境中运行。
 # ToDoList
