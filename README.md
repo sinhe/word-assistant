@@ -13,4 +13,6 @@
 3. ☑️远程智能纠错 by 流星（功能：纠正文字错误、乱码、英文和数字混淆、标点符号的全角半角错误，删除多余的换行符）此功能将发送用户端选择的文本到第三方服务端运行并返回结果，介意者请勿使用。
 ![3103116](https://github.com/user-attachments/assets/299774eb-4587-44d8-bcee-e0cf159e05e7)
 4. ☑️生成格式报告 by gix（功能：提取文档样式、字体和字号的格式信息）
-![4112733](https://github.com/user-attachments/assets/8bd90a1b-ea04-448d-aec5-c6211110c580)
+![412828](https://github.com/user-attachments/assets/855d2f88-745c-4920-b662-7dd08ae8fdf7)
+5. ☑️私人定制模块 by 周Sir（功能：有HTML和C#开发能力者自行无限制开发）
+![512952](https://github.com/user-attachments/assets/e2e37956-8d35-4845-8d4d-718f14f7211a)
