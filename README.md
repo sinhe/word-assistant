@@ -14,5 +14,5 @@
 ![3103116](https://github.com/user-attachments/assets/299774eb-4587-44d8-bcee-e0cf159e05e7)
 4. ☑️统计格式信息 by gix（功能：提取文档样式、字体和字号的格式信息）
 ![412828](https://github.com/user-attachments/assets/855d2f88-745c-4920-b662-7dd08ae8fdf7)
-5. ☑️私人定制模块 by 周Sir（功能：有HTML和C#开发能力者可以玩的飞起^_^）
+5. ☑️私人定制模块 by 周Sir（功能：有HTML和C#编程能力者可以玩的飞起^_^）
 ![512952](https://github.com/user-attachments/assets/e2e37956-8d35-4845-8d4d-718f14f7211a)
