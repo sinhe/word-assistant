@@ -12,7 +12,9 @@
 ![2112243](https://github.com/user-attachments/assets/4cbc90db-ac28-46a2-b917-abc5482dc626)
 3. ☑️远程智能纠错 by 流星（功能：纠正文字错误、乱码、英文和数字混淆、标点符号的全角半角错误，删除多余的换行符）此功能将发送用户端选择的文本到第三方服务端运行并返回结果，介意者请勿使用。
 ![3103116](https://github.com/user-attachments/assets/299774eb-4587-44d8-bcee-e0cf159e05e7)
-4. ☑️统计格式信息 by gix（功能：提取文档样式、字体和字号的格式信息）
+4. ☑️远程OCR识别 by 流星（功能：OCR识别图片中的文字）此功能将发送用户端选择的图片到第三方服务端运行并返回结果，介意者可以本地部署使用。
+![20241015115837](https://github.com/user-attachments/assets/7c3310d4-08a6-4162-bdcc-35f223b75420)
+5. ☑️统计格式信息 by gix（功能：提取文档样式、字体和字号的格式信息）
 ![412828](https://github.com/user-attachments/assets/855d2f88-745c-4920-b662-7dd08ae8fdf7)
-5. ☑️私人定制模块 by 周Sir（功能：有HTML和C#编程能力者可以玩的飞起^_^）
+6. ☑️私人定制模块 by 周Sir（功能：有HTML和C#编程能力者可以玩的飞起^_^）
 ![512952](https://github.com/user-attachments/assets/e2e37956-8d35-4845-8d4d-718f14f7211a)
